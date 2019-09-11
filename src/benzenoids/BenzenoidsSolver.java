@@ -5,11 +5,13 @@ import org.chocosolver.solver.Solution;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.constraints.nary.cnf.LogOp;
 import org.chocosolver.solver.variables.*;
+import org.chocosolver.solver.variables.impl.IntervalIntVarImpl;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Pattern;
 
 import org.chocosolver.graphsolver.GraphModel;
@@ -41,8 +43,6 @@ public class BenzenoidsSolver {
 	
 	//Solutions lists
 	private static ArrayList<Solution> molecules = new ArrayList<Solution>();
-	private static ArrayList<ArrayList<Solution>> lewisStructures = new ArrayList<ArrayList<Solution>>();
-	private static ArrayList<Solution> alternantCycles = new ArrayList<Solution>();
 	
 	//Problem's attributes
 	public static int dimension;
@@ -51,6 +51,8 @@ public class BenzenoidsSolver {
 	public static boolean nbHexaLimite;
 	
 	private static BoolVar[] h;
+	
+	private static int[] cycles;
 	
 	public static void generateMolecules() {
 		GraphModel model = new GraphModel("Benzenoides");
@@ -175,13 +177,16 @@ public class BenzenoidsSolver {
 	
 	public static String getName(String path) {
 		String [] splittedPath = path.split(Pattern.quote("."));
-		return splittedPath[0];
+		String [] name = splittedPath[0].split(Pattern.quote("/"));
+		return name[name.length-1];
 	}
 	
-	public static ArrayList<String> generateLewisStructures(String path) {
+	public static ArrayList<String> generateLewisStructures(String path, String outputDirectory) {
 		
 		UndirGraph graph = GraphParser.parseUndirectedGraph(path);
 		Model model = new Model("Lewis Structures");
+		
+		cycles = new int[graph.getNbEdges() + 1];
 		
 		String name = getName(path);
 		
@@ -218,7 +223,7 @@ public class BenzenoidsSolver {
 				edgesValues[j] = solution.getIntVal(edges[j]);
 			}
 			
-			String filename = name + "_" + i + ".graph";
+			String filename = outputDirectory + "/" + name + "_" + i + ".graph";
 			GraphParser.exportSolutionToPonderateGraph(filename, graph, edgesValues);
 			paths.add(filename);
 			
@@ -228,15 +233,24 @@ public class BenzenoidsSolver {
 		return paths;
 	}
 	
-	public static void computeCycles(String path) {
+	public static void exportGraph(DirectedGraphVar g, String directory, String name) {
+		try {
+			BufferedWriter w = new BufferedWriter(new FileWriter(new File(directory + "/" + name)));
+			w.write(g.graphVizExport());
+			w.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void computeCycles(String path, String outputDirectory) {
 		
 		UndirPonderateGraph graph = GraphParser.parseUndirectedPonderateGraph(path);
 		
-		int nbNodes = graph.getNbNodes();
-		int nbEdges = graph.getNbEdges();
+		int nbNode = graph.getNbNodes();
 		
-		int [] nodesSet = new int[nbNodes];
-		int [] visitedNodes = new int[nbNodes];
+		int [] nodesSet = new int[nbNode];
+		int [] visitedNodes = new int[nbNode];
 		
 		int deep = 0;
 		int n = 0;
@@ -249,7 +263,7 @@ public class BenzenoidsSolver {
 	
 		
 		//Récupérer l'ensemble des "atomes étoilés"
-		while (n < nbNodes / 2) {
+		while (n < nbNode / 2) {
 			
 			int newCount = 0;
 			
@@ -279,7 +293,7 @@ public class BenzenoidsSolver {
 		
 		//Récupérer l'ensemble des couples d'arêtes alternantes
 		ArrayList<DirectedEdge> edges = new ArrayList<DirectedEdge>();
-		for (int u = 0 ; u < nbNodes ; u++) {
+		for (int u = 0 ; u < nbNode ; u++) {
 			if (nodesSet[u] == 1) {
 				
 				for (Couple<Integer> couple : graph.getNodesMatrix().get(u)) { //Couples (sommet, liaison)
@@ -301,12 +315,11 @@ public class BenzenoidsSolver {
 		//Créer le problème
 		GraphModel model = new GraphModel("Alternant Cycles");
 		
-		DirectedGraph GLB = new DirectedGraph(model, nbNodes, SetType.BITSET, false);
-		DirectedGraph GUB = new DirectedGraph(model, nbNodes, SetType.BITSET, false);
+		DirectedGraph GLB = new DirectedGraph(model, nbNode, SetType.BITSET, false);
+		DirectedGraph GUB = new DirectedGraph(model, nbNode, SetType.BITSET, false);
 		
-		for (int i = 0 ; i < nbNodes ; i ++) {
+		for (int i = 0 ; i < nbNode ; i ++) {
 			if (nodesSet[i] == 1) {
-				//GLB.addNode(i);
 				GUB.addNode(i);
 			}
 		}
@@ -316,37 +329,71 @@ public class BenzenoidsSolver {
 		}
 		
 		DirectedGraphVar g = model.digraphVar("g", GLB, GUB);
-		//model.circuit(g).post();
 		model.stronglyConnected(g).post();
 		model.maxOutDegrees(g, 1).post();
 		model.arithm(model.nbNodes(g), ">", 1).post();
 		
-		/*
-		BoolVar [] E = new BoolVar [edges.size()];
-		for (int i = 0 ; i < edges.size() ; i++) {
-			DirectedEdge edge = edges.get(i);
-			E[i] = model.boolVar(edge.getU() + "->" + edge.getV());
-			model.arcChanneling(g, E[i], edge.getU(), edge.getV()).post();
-		}*/
-		
-		//model.getSolver().setSearch(new IntStrategy(E, new FirstFail(model), new IntDomainMin())); 
-		
 		Solver solver = model.getSolver();
 		
-		ArrayList<Solution> solutionStack = new ArrayList<Solution>();
-		
+		//Résoudre le problème et stocker les résultats
+		int i = 0;
 		while(solver.solve()) {
 			Solution solution = new Solution(model);
 			solution.record();
-			solutionStack.add(solution);
-			//System.out.println(solution);
+			
 			System.out.println(g);
+			
+			exportGraph(g, outputDirectory, "cycle_" + i + ".dot");
+			
+			int nbNodesSolution = g.getMandatoryNodes().size() * 2;
+			cycles[nbNodesSolution] ++;
+			
+			i ++;
 		}
-		
-		System.out.println(solutionStack.size());
+	}
+	
+	public static void displayCycles(String directory) {
+		try {
+			BufferedWriter w = new BufferedWriter(new FileWriter(new File(directory + "/cycles.txt")));
+			for (int i = 0 ; i < cycles.length ; i++) {
+				if (cycles[i] > 0)
+					w.write(cycles[i] + " cycles of " + i + " edges \n");
+			}
+			w.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
+	public static void analyzeMolecule(String filename){
+		
+		String [] splittedPath = filename.split(Pattern.quote("."));
+		String [] splittedPath2 = splittedPath[0].split(Pattern.quote("/"));
+		
+		
+		String rootDirectoryName = "";
+		for (int i = 0 ; i < splittedPath2.length - 1 ; i++) {
+			rootDirectoryName += splittedPath2[i] + "/";
+		}
+		
+		String lewisDirectoryName = rootDirectoryName + "lewis";
+		
+		File lewisDirectory = new File(lewisDirectoryName);
+		lewisDirectory.mkdir();
+		
+		ArrayList<String> lewisStructures = generateLewisStructures(filename, lewisDirectoryName);
+		
+		for (String lewisStructure : lewisStructures) {
+			String structureDirectoryName = lewisStructure.split(Pattern.quote("."))[0];
+			File structureDirectory = new File(structureDirectoryName);
+			structureDirectory.mkdir();
+			computeCycles(lewisStructure, structureDirectoryName);
+		}
+		
+		displayCycles(rootDirectoryName);
+		
+	}
 	
 	public static void displayUsage() {
 		System.err.println("USAGE");
@@ -354,9 +401,7 @@ public class BenzenoidsSolver {
 	}
 	
 	public static void main(String [] args) {
-		//generateLewisStructures("benzene.graph");
-		//computeCycles("benzene_0.graph");
-		generateLewisStructures("phenanthrene.graph");
-		computeCycles("phenanthrene_0.graph");
+		//analyzeMolecule("molecules/benzene/benzene.graph");
+		analyzeMolecule("molecules/phenanthrene/phenanthrene.graph");
  	}
 }
