@@ -371,6 +371,13 @@ public class BenzenoidsSolver {
 			
 			System.out.println(nbArcs.getValue());
 			
+			System.out.print("[");
+			for (int j = 0 ; j < boolEdges.length ; j++) {
+				//System.out.print(boolEdges[i].getValue() + ", "); 
+				System.out.print(solution.getIntVal(boolEdges[j]) + ", ");
+			}
+			System.out.println("]");
+			
 			queue.offer(new CoupleCycle(i, nbNodesSolution));
 			
 			i ++;
