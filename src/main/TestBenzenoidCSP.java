@@ -291,7 +291,14 @@ public class TestBenzenoidCSP {
         
         model.getSolver().setSearch(new IntStrategy(b, new FirstFail(model), new IntDomainMin()));
 		Solver solver = model.getSolver();		
-		solver.showSolutions();
-		solver.findAllSolutions();
+		
+		while(solver.solve()) {
+			Solution solution = new Solution(model);
+			solution.record();
+			System.out.println(solution);
+		}
+		
+		//solver.showSolutions();
+		//solver.findAllSolutions();
 	}
 }

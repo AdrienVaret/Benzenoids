@@ -1,0 +1,3 @@
+6 cycles of 6 edges 
+4 cycles of 10 edges 
+2 cycles of 14 edges 

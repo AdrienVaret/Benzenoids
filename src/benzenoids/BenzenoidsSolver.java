@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.regex.Pattern;
 
 import org.chocosolver.graphsolver.GraphModel;
@@ -26,6 +27,7 @@ import graphs.UndirGraph;
 import graphs.UndirPonderateGraph;
 import parser.GraphParser;
 import utils.Couple;
+import utils.CoupleCycle;
 
 import org.chocosolver.solver.search.strategy.strategy.*;
 import org.chocosolver.solver.search.strategy.selectors.values.IntDomainMin;
@@ -227,6 +229,8 @@ public class BenzenoidsSolver {
 			GraphParser.exportSolutionToPonderateGraph(filename, graph, edgesValues);
 			paths.add(filename);
 			
+			System.out.println("> " + filename + " generated");
+			
 			i++;
 		}
 		
@@ -329,13 +333,29 @@ public class BenzenoidsSolver {
 		}
 		
 		DirectedGraphVar g = model.digraphVar("g", GLB, GUB);
+		
+		//Commenter cette boucle pour enlever la boucle infinie !
+		BoolVar[] boolEdges = new BoolVar[edges.size()];
+		for (int i = 0 ; i < edges.size() ; i++) {
+			boolEdges[i] = model.boolVar("edge_" + i);
+			model.arcChanneling(g, boolEdges[i], edges.get(i).getU(), edges.get(i).getV()).post();
+		}
+		//model.getSolver().setSearch(new IntStrategy(boolEdges, new FirstFail(model), new IntDomainMin()));
+		
 		model.stronglyConnected(g).post();
 		model.maxOutDegrees(g, 1).post();
 		model.arithm(model.nbNodes(g), ">", 1).post();
 		
+		
+		
+		
+		IntVar nbArcs = model.intVar("arcCount", 0, edges.size(), true);		
+		model.nbArcs(g, nbArcs).post();
+		
 		Solver solver = model.getSolver();
 		
 		//Résoudre le problème et stocker les résultats
+		PriorityQueue<CoupleCycle> queue = new PriorityQueue<CoupleCycle>();
 		int i = 0;
 		while(solver.solve()) {
 			Solution solution = new Solution(model);
@@ -346,18 +366,29 @@ public class BenzenoidsSolver {
 			exportGraph(g, outputDirectory, "cycle_" + i + ".dot");
 			
 			int nbNodesSolution = g.getMandatoryNodes().size() * 2;
+						
 			cycles[nbNodesSolution] ++;
+			
+			System.out.println(nbArcs.getValue());
+			
+			queue.offer(new CoupleCycle(i, nbNodesSolution));
 			
 			i ++;
 		}
+		
+		int [][] cycles = new int [i][nbNode];
+		
 	}
 	
 	public static void displayCycles(String directory) {
+		System.out.println("All alternant cycles generateds, stored in ./cycles.txt");
 		try {
 			BufferedWriter w = new BufferedWriter(new FileWriter(new File(directory + "/cycles.txt")));
 			for (int i = 0 ; i < cycles.length ; i++) {
-				if (cycles[i] > 0)
-					w.write(cycles[i] + " cycles of " + i + " edges \n");
+				if (cycles[i] > 0) {
+					w.write(cycles[i] + " cycles of " + i + " edges. \n");
+					System.out.println(cycles[i] + " cycles of " + i + " edges.");
+				}
 			}
 			w.close();
 		} catch (IOException e) {
@@ -367,6 +398,8 @@ public class BenzenoidsSolver {
 	}
 	
 	public static void analyzeMolecule(String filename){
+		
+		System.out.println("Analizing molecule : " + filename);
 		
 		String [] splittedPath = filename.split(Pattern.quote("."));
 		String [] splittedPath2 = splittedPath[0].split(Pattern.quote("/"));
@@ -382,12 +415,19 @@ public class BenzenoidsSolver {
 		File lewisDirectory = new File(lewisDirectoryName);
 		lewisDirectory.mkdir();
 		
+		System.out.println("Generating lewis structures ...");
+		
 		ArrayList<String> lewisStructures = generateLewisStructures(filename, lewisDirectoryName);
+		
+		System.out.println(lewisStructures.size() + " lewis structure generated.");
 		
 		for (String lewisStructure : lewisStructures) {
 			String structureDirectoryName = lewisStructure.split(Pattern.quote("."))[0];
 			File structureDirectory = new File(structureDirectoryName);
 			structureDirectory.mkdir();
+			
+			System.out.println("Generating alternant cycles of : " + lewisStructure);
+			
 			computeCycles(lewisStructure, structureDirectoryName);
 		}
 		
@@ -402,6 +442,8 @@ public class BenzenoidsSolver {
 	
 	public static void main(String [] args) {
 		//analyzeMolecule("molecules/benzene/benzene.graph");
-		analyzeMolecule("molecules/phenanthrene/phenanthrene.graph");
+		//analyzeMolecule("molecules/phenanthrene/phenanthrene.graph");
+		//analyzeMolecule("molecules/3_hexa/3_hexa.graph");
+		analyzeMolecule("molecules/benzanthracene/benzanthracene.graph");
  	}
 }
