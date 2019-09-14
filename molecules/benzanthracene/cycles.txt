@@ -1,4 +1,4 @@
 16 cycles of 6 edges. 
 8 cycles of 10 edges. 
-4 cycles of 14 edges. 
-2 cycles of 18 edges. 
+3 cycles of 14 edges. 
+1 cycles of 18 edges. 

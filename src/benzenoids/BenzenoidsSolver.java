@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.regex.Pattern;
 
@@ -27,7 +28,7 @@ import graphs.UndirGraph;
 import graphs.UndirPonderateGraph;
 import parser.GraphParser;
 import utils.Couple;
-import utils.CoupleCycle;
+import utils.Cycle;
 
 import org.chocosolver.solver.search.strategy.strategy.*;
 import org.chocosolver.solver.search.strategy.selectors.values.IntDomainMin;
@@ -54,7 +55,7 @@ public class BenzenoidsSolver {
 	
 	private static BoolVar[] h;
 	
-	private static int[] cycles;
+	private static int[] cyclesCount;
 	
 	public static void generateMolecules() {
 		GraphModel model = new GraphModel("Benzenoides");
@@ -188,7 +189,7 @@ public class BenzenoidsSolver {
 		UndirGraph graph = GraphParser.parseUndirectedGraph(path);
 		Model model = new Model("Lewis Structures");
 		
-		cycles = new int[graph.getNbEdges() + 1];
+		cyclesCount = new int[graph.getNbEdges() + 1];
 		
 		String name = getName(path);
 		
@@ -244,6 +245,37 @@ public class BenzenoidsSolver {
 			w.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public static void countCycles(ArrayList<Cycle> cycles) {
+		
+		int nbMaxEdges = cycles.get(0).getEdges().length;
+		
+		for (int i = 0 ; i < cycles.size() ; i++) {
+			Cycle cycle = cycles.get(i);
+			int [] sumCycles = new int [nbMaxEdges];
+			
+			for (int j = 0 ; j < i ; j++) {
+				Cycle cycle2 = cycles.get(j);
+				if (cycle2.getSize() >= cycle.getSize()) break;
+				
+				for (int k = 0 ; k < nbMaxEdges ; k ++) {
+					sumCycles[k] += cycle2.getEdge(k);
+				}
+			}
+			
+			//Check si le cycle est linéairement indépendant
+			boolean independant = false;
+			for (int j = 0 ; j < nbMaxEdges ; j ++) {
+				if (cycle.getEdge(j) == 1 && sumCycles[j] == 0) {
+					independant = true;
+					break;
+				}
+			}
+			
+			if (independant)
+				cyclesCount[cycle.getSize()] ++;
 		}
 	}
 	
@@ -334,24 +366,16 @@ public class BenzenoidsSolver {
 		
 		DirectedGraphVar g = model.digraphVar("g", GLB, GUB);
 		
-		
-		
-	
 		BoolVar[] boolEdges = new BoolVar[edges.size()];
 		for (int i = 0 ; i < edges.size() ; i++) {
-			//boolEdges[i] = model.boolVar("edge_" + i);
 			boolEdges[i] = model.boolVar("(" + edges.get(i).getU() + "->" + edges.get(i).getV() + ")");
 			model.arcChanneling(g, boolEdges[i], edges.get(i).getU(), edges.get(i).getV()).post();
 		}
 		model.getSolver().setSearch(new IntStrategy(boolEdges, new FirstFail(model), new IntDomainMin()));
-	
-		
-		
 		
 		model.stronglyConnected(g).post();
 		model.maxOutDegrees(g, 1).post();
 		model.minOutDegrees(g, 1).post();
-		
 		model.arithm(model.nbNodes(g), ">", 1).post();	
 		
 		IntVar nbArcs = model.intVar("arcCount", 0, edges.size(), true);		
@@ -362,7 +386,7 @@ public class BenzenoidsSolver {
 		Solver solver = model.getSolver();
 		
 		//Résoudre le problème et stocker les résultats
-		PriorityQueue<CoupleCycle> queue = new PriorityQueue<CoupleCycle>();
+		ArrayList<Cycle> cycles = new ArrayList<Cycle>();
 		int i = 0;
 		while(solver.solve()) {
 			Solution solution = new Solution(model);
@@ -376,9 +400,7 @@ public class BenzenoidsSolver {
 			//int nbNodesSolution = g.getMandatoryNodes().size() * 2;
 			int nbNodesSolution = nbArcs.getValue() * 2;
 			
-			cycles[nbNodesSolution] ++;
-			
-			
+			//cyclesCount[nbNodesSolution] ++;
 			
 			int [] edgesCycle = new int[boolEdges.length];
 			
@@ -389,24 +411,23 @@ public class BenzenoidsSolver {
 			}
 			System.out.println("]");
 			
-			
-			queue.offer(new CoupleCycle(edgesCycle, nbNodesSolution));
+			cycles.add(new Cycle(edgesCycle, nbNodesSolution));
 			
 			i ++;
 		}
 		
-		int [][] cycles = new int [i][nbNode];
-		
+		Collections.sort(cycles);
+		countCycles(cycles);
 	}
 	
 	public static void displayCycles(String directory) {
 		System.out.println("All alternant cycles generateds, stored in ./cycles.txt");
 		try {
 			BufferedWriter w = new BufferedWriter(new FileWriter(new File(directory + "/cycles.txt")));
-			for (int i = 0 ; i < cycles.length ; i++) {
-				if (cycles[i] > 0) {
-					w.write(cycles[i] + " cycles of " + i + " edges. \n");
-					System.out.println(cycles[i] + " cycles of " + i + " edges.");
+			for (int i = 0 ; i < cyclesCount.length ; i++) {
+				if (cyclesCount[i] > 0) {
+					w.write(cyclesCount[i] + " cycles of " + i + " edges. \n");
+					System.out.println(cyclesCount[i] + " cycles of " + i + " edges.");
 				}
 			}
 			w.close();

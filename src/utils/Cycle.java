@@ -1,11 +1,11 @@
 package utils;
 
-public class CoupleCycle implements Comparable<CoupleCycle>{
+public class Cycle implements Comparable<Cycle>{
 
 	private int [] edges;
 	private int size;
 	
-	public CoupleCycle(int [] edges, int size) {
+	public Cycle(int [] edges, int size) {
 		this.edges = edges;
 		this.size = size;
 	}
@@ -23,13 +23,22 @@ public class CoupleCycle implements Comparable<CoupleCycle>{
 	}
 
 	@Override
-	public int compareTo(CoupleCycle o) {
+	public int compareTo(Cycle o) {
 		if (size < o.getSize())
 			return -1;
 		else if (size == o.getSize())
 			return 0;
 		else 
 			return 1;
+	}
+	
+	@Override
+	public String toString() {
+		String toString = "[";
+		for (int i = 0 ; i < edges.length ; i++)
+			toString += edges[i] + ", ";
+		toString += "] (" + size + ")";
+		return toString;
 	}
 
 }
