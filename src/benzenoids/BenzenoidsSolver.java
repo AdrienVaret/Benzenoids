@@ -334,23 +334,30 @@ public class BenzenoidsSolver {
 		
 		DirectedGraphVar g = model.digraphVar("g", GLB, GUB);
 		
-		//Commenter cette boucle pour enlever la boucle infinie !
+		
+		
+	
 		BoolVar[] boolEdges = new BoolVar[edges.size()];
 		for (int i = 0 ; i < edges.size() ; i++) {
-			boolEdges[i] = model.boolVar("edge_" + i);
+			//boolEdges[i] = model.boolVar("edge_" + i);
+			boolEdges[i] = model.boolVar("(" + edges.get(i).getU() + "->" + edges.get(i).getV() + ")");
 			model.arcChanneling(g, boolEdges[i], edges.get(i).getU(), edges.get(i).getV()).post();
 		}
-		//model.getSolver().setSearch(new IntStrategy(boolEdges, new FirstFail(model), new IntDomainMin()));
+		model.getSolver().setSearch(new IntStrategy(boolEdges, new FirstFail(model), new IntDomainMin()));
+	
+		
+		
 		
 		model.stronglyConnected(g).post();
 		model.maxOutDegrees(g, 1).post();
-		model.arithm(model.nbNodes(g), ">", 1).post();
+		model.minOutDegrees(g, 1).post();
 		
-		
-		
+		model.arithm(model.nbNodes(g), ">", 1).post();	
 		
 		IntVar nbArcs = model.intVar("arcCount", 0, edges.size(), true);		
 		model.nbArcs(g, nbArcs).post();
+		
+		model.sum(boolEdges, ">", 0).post();
 		
 		Solver solver = model.getSolver();
 		
@@ -362,23 +369,28 @@ public class BenzenoidsSolver {
 			solution.record();
 			
 			System.out.println(g);
+			System.out.println(solution);
 			
 			exportGraph(g, outputDirectory, "cycle_" + i + ".dot");
 			
-			int nbNodesSolution = g.getMandatoryNodes().size() * 2;
-						
+			//int nbNodesSolution = g.getMandatoryNodes().size() * 2;
+			int nbNodesSolution = nbArcs.getValue() * 2;
+			
 			cycles[nbNodesSolution] ++;
 			
-			System.out.println(nbArcs.getValue());
+			
+			
+			int [] edgesCycle = new int[boolEdges.length];
 			
 			System.out.print("[");
 			for (int j = 0 ; j < boolEdges.length ; j++) {
-				//System.out.print(boolEdges[i].getValue() + ", "); 
 				System.out.print(solution.getIntVal(boolEdges[j]) + ", ");
+				edgesCycle[j] = solution.getIntVal(boolEdges[j]);
 			}
 			System.out.println("]");
 			
-			queue.offer(new CoupleCycle(i, nbNodesSolution));
+			
+			queue.offer(new CoupleCycle(edgesCycle, nbNodesSolution));
 			
 			i ++;
 		}

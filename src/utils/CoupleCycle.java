@@ -2,16 +2,20 @@ package utils;
 
 public class CoupleCycle implements Comparable<CoupleCycle>{
 
-	private int index;
+	private int [] edges;
 	private int size;
 	
-	public CoupleCycle(int index, int size) {
-		this.index = index;
+	public CoupleCycle(int [] edges, int size) {
+		this.edges = edges;
 		this.size = size;
 	}
 	
-	public int getIndex() {
-		return index;
+	public int [] getEdges() {
+		return edges;
+	}
+	
+	public int getEdge(int index) {
+		return edges[index];
 	}
 	
 	public int getSize() {

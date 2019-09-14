@@ -3,4 +3,5 @@ node [color = red, fontcolor=red]; 0 2 4 ;
 0 -> 2 [color=red] ;
 2 -> 4 [color=red] ;
 4 -> 0 [color=red] ;
+node [color = black, fontcolor=black]; 17 ;
 }
