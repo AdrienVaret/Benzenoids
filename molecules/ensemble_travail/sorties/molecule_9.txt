@@ -1,0 +1,346 @@
+Analizing molecule : molecules/ensemble_travail/molecule_9/molecule_9.graph
+Generating lewis structures ...
+> molecules/ensemble_travail/molecule_9/lewis/molecule_9_0.graph generated
+> molecules/ensemble_travail/molecule_9/lewis/molecule_9_1.graph generated
+> molecules/ensemble_travail/molecule_9/lewis/molecule_9_2.graph generated
+> molecules/ensemble_travail/molecule_9/lewis/molecule_9_3.graph generated
+> molecules/ensemble_travail/molecule_9/lewis/molecule_9_4.graph generated
+> molecules/ensemble_travail/molecule_9/lewis/molecule_9_5.graph generated
+6 lewis structure generated.
+Generating alternant cycles of : molecules/ensemble_travail/molecule_9/lewis/molecule_9_0.graph
+graph_var g
+Value: 
+nodes : 
+{4, 6, 8, 13, 15}
+successors : 
+4 -> {6 }
+6 -> {13 }
+8 -> {4 }
+13 -> {15 }
+15 -> {8 }
+
+Solution: (0->2)=0, (2->6)=0, (2->11)=0, (4->6)=1, (4->0)=0, (6->8)=0, (6->13)=1, (8->4)=1, (11->13)=0, (13->15)=1, (15->8)=1, nbNodes=5, arcCount=5, 
+[0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{4, 6, 8}
+successors : 
+4 -> {6 }
+6 -> {8 }
+8 -> {4 }
+
+Solution: (0->2)=0, (2->6)=0, (2->11)=0, (4->6)=1, (4->0)=0, (6->8)=1, (6->13)=0, (8->4)=1, (11->13)=0, (13->15)=0, (15->8)=0, nbNodes=3, arcCount=3, 
+[0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4, 8, 11, 13, 15}
+successors : 
+0 -> {2 }
+2 -> {11 }
+4 -> {0 }
+8 -> {4 }
+11 -> {13 }
+13 -> {15 }
+15 -> {8 }
+
+Solution: (0->2)=1, (2->6)=0, (2->11)=1, (4->6)=0, (4->0)=1, (6->8)=0, (6->13)=0, (8->4)=1, (11->13)=1, (13->15)=1, (15->8)=1, nbNodes=7, arcCount=7, 
+[1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4, 6, 8, 13, 15}
+successors : 
+0 -> {2 }
+2 -> {6 }
+4 -> {0 }
+6 -> {13 }
+8 -> {4 }
+13 -> {15 }
+15 -> {8 }
+
+Solution: (0->2)=1, (2->6)=1, (2->11)=0, (4->6)=0, (4->0)=1, (6->8)=0, (6->13)=1, (8->4)=1, (11->13)=0, (13->15)=1, (15->8)=1, nbNodes=7, arcCount=7, 
+[1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4, 6, 8}
+successors : 
+0 -> {2 }
+2 -> {6 }
+4 -> {0 }
+6 -> {8 }
+8 -> {4 }
+
+Solution: (0->2)=1, (2->6)=1, (2->11)=0, (4->6)=0, (4->0)=1, (6->8)=1, (6->13)=0, (8->4)=1, (11->13)=0, (13->15)=0, (15->8)=0, nbNodes=5, arcCount=5, 
+[1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, ]
+Generating alternant cycles of : molecules/ensemble_travail/molecule_9/lewis/molecule_9_1.graph
+graph_var g
+Value: 
+nodes : 
+{6, 13, 15}
+successors : 
+6 -> {15 }
+13 -> {6 }
+15 -> {13 }
+
+Solution: (0->2)=0, (2->4)=0, (2->11)=0, (4->0)=0, (4->8)=0, (6->4)=0, (6->15)=1, (8->15)=0, (11->6)=0, (13->6)=1, (15->13)=1, nbNodes=3, arcCount=3, 
+[0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{4, 6, 8, 13, 15}
+successors : 
+4 -> {8 }
+6 -> {4 }
+8 -> {15 }
+13 -> {6 }
+15 -> {13 }
+
+Solution: (0->2)=0, (2->4)=0, (2->11)=0, (4->0)=0, (4->8)=1, (6->4)=1, (6->15)=0, (8->15)=1, (11->6)=0, (13->6)=1, (15->13)=1, nbNodes=5, arcCount=5, 
+[0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4, 6, 11}
+successors : 
+0 -> {2 }
+2 -> {11 }
+4 -> {0 }
+6 -> {4 }
+11 -> {6 }
+
+Solution: (0->2)=1, (2->4)=0, (2->11)=1, (4->0)=1, (4->8)=0, (6->4)=1, (6->15)=0, (8->15)=0, (11->6)=1, (13->6)=0, (15->13)=0, nbNodes=5, arcCount=5, 
+[1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4}
+successors : 
+0 -> {2 }
+2 -> {4 }
+4 -> {0 }
+
+Solution: (0->2)=1, (2->4)=1, (2->11)=0, (4->0)=1, (4->8)=0, (6->4)=0, (6->15)=0, (8->15)=0, (11->6)=0, (13->6)=0, (15->13)=0, nbNodes=3, arcCount=3, 
+[1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, ]
+Generating alternant cycles of : molecules/ensemble_travail/molecule_9/lewis/molecule_9_2.graph
+graph_var g
+Value: 
+nodes : 
+{6, 13, 15}
+successors : 
+6 -> {13 }
+13 -> {15 }
+15 -> {6 }
+
+Solution: (0->2)=0, (2->4)=0, (2->11)=0, (4->0)=0, (4->8)=0, (6->4)=0, (6->13)=1, (8->6)=0, (11->13)=0, (13->15)=1, (15->6)=1, nbNodes=3, arcCount=3, 
+[0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{4, 6, 8}
+successors : 
+4 -> {8 }
+6 -> {4 }
+8 -> {6 }
+
+Solution: (0->2)=0, (2->4)=0, (2->11)=0, (4->0)=0, (4->8)=1, (6->4)=1, (6->13)=0, (8->6)=1, (11->13)=0, (13->15)=0, (15->6)=0, nbNodes=3, arcCount=3, 
+[0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4, 6, 11, 13, 15}
+successors : 
+0 -> {2 }
+2 -> {11 }
+4 -> {0 }
+6 -> {4 }
+11 -> {13 }
+13 -> {15 }
+15 -> {6 }
+
+Solution: (0->2)=1, (2->4)=0, (2->11)=1, (4->0)=1, (4->8)=0, (6->4)=1, (6->13)=0, (8->6)=0, (11->13)=1, (13->15)=1, (15->6)=1, nbNodes=7, arcCount=7, 
+[1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4}
+successors : 
+0 -> {2 }
+2 -> {4 }
+4 -> {0 }
+
+Solution: (0->2)=1, (2->4)=1, (2->11)=0, (4->0)=1, (4->8)=0, (6->4)=0, (6->13)=0, (8->6)=0, (11->13)=0, (13->15)=0, (15->6)=0, nbNodes=3, arcCount=3, 
+[1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, ]
+Generating alternant cycles of : molecules/ensemble_travail/molecule_9/lewis/molecule_9_3.graph
+graph_var g
+Value: 
+nodes : 
+{2, 6, 11}
+successors : 
+2 -> {6 }
+6 -> {11 }
+11 -> {2 }
+
+Solution: (0->4)=0, (2->0)=0, (2->6)=1, (4->6)=0, (4->8)=0, (6->15)=0, (6->11)=1, (8->15)=0, (11->2)=1, (13->11)=0, (15->13)=0, nbNodes=3, arcCount=3, 
+[0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, ]
+graph_var g
+Value: 
+nodes : 
+{2, 6, 11, 13, 15}
+successors : 
+2 -> {6 }
+6 -> {15 }
+11 -> {2 }
+13 -> {11 }
+15 -> {13 }
+
+Solution: (0->4)=0, (2->0)=0, (2->6)=1, (4->6)=0, (4->8)=0, (6->15)=1, (6->11)=0, (8->15)=0, (11->2)=1, (13->11)=1, (15->13)=1, nbNodes=5, arcCount=5, 
+[0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4, 8, 11, 13, 15}
+successors : 
+0 -> {4 }
+2 -> {0 }
+4 -> {8 }
+8 -> {15 }
+11 -> {2 }
+13 -> {11 }
+15 -> {13 }
+
+Solution: (0->4)=1, (2->0)=1, (2->6)=0, (4->6)=0, (4->8)=1, (6->15)=0, (6->11)=0, (8->15)=1, (11->2)=1, (13->11)=1, (15->13)=1, nbNodes=7, arcCount=7, 
+[1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4, 6, 11}
+successors : 
+0 -> {4 }
+2 -> {0 }
+4 -> {6 }
+6 -> {11 }
+11 -> {2 }
+
+Solution: (0->4)=1, (2->0)=1, (2->6)=0, (4->6)=1, (4->8)=0, (6->15)=0, (6->11)=1, (8->15)=0, (11->2)=1, (13->11)=0, (15->13)=0, nbNodes=5, arcCount=5, 
+[1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4, 6, 11, 13, 15}
+successors : 
+0 -> {4 }
+2 -> {0 }
+4 -> {6 }
+6 -> {15 }
+11 -> {2 }
+13 -> {11 }
+15 -> {13 }
+
+Solution: (0->4)=1, (2->0)=1, (2->6)=0, (4->6)=1, (4->8)=0, (6->15)=1, (6->11)=0, (8->15)=0, (11->2)=1, (13->11)=1, (15->13)=1, nbNodes=7, arcCount=7, 
+[1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, ]
+Generating alternant cycles of : molecules/ensemble_travail/molecule_9/lewis/molecule_9_4.graph
+graph_var g
+Value: 
+nodes : 
+{6, 13, 15}
+successors : 
+6 -> {15 }
+13 -> {6 }
+15 -> {13 }
+
+Solution: (0->4)=0, (2->0)=0, (2->11)=0, (4->2)=0, (4->8)=0, (6->2)=0, (6->15)=1, (8->15)=0, (11->6)=0, (13->6)=1, (15->13)=1, nbNodes=3, arcCount=3, 
+[0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{2, 6, 11}
+successors : 
+2 -> {11 }
+6 -> {2 }
+11 -> {6 }
+
+Solution: (0->4)=0, (2->0)=0, (2->11)=1, (4->2)=0, (4->8)=0, (6->2)=1, (6->15)=0, (8->15)=0, (11->6)=1, (13->6)=0, (15->13)=0, nbNodes=3, arcCount=3, 
+[0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4, 6, 8, 13, 15}
+successors : 
+0 -> {4 }
+2 -> {0 }
+4 -> {8 }
+6 -> {2 }
+8 -> {15 }
+13 -> {6 }
+15 -> {13 }
+
+Solution: (0->4)=1, (2->0)=1, (2->11)=0, (4->2)=0, (4->8)=1, (6->2)=1, (6->15)=0, (8->15)=1, (11->6)=0, (13->6)=1, (15->13)=1, nbNodes=7, arcCount=7, 
+[1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4}
+successors : 
+0 -> {4 }
+2 -> {0 }
+4 -> {2 }
+
+Solution: (0->4)=1, (2->0)=1, (2->11)=0, (4->2)=1, (4->8)=0, (6->2)=0, (6->15)=0, (8->15)=0, (11->6)=0, (13->6)=0, (15->13)=0, nbNodes=3, arcCount=3, 
+[1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, ]
+Generating alternant cycles of : molecules/ensemble_travail/molecule_9/lewis/molecule_9_5.graph
+graph_var g
+Value: 
+nodes : 
+{6, 13, 15}
+successors : 
+6 -> {13 }
+13 -> {15 }
+15 -> {6 }
+
+Solution: (0->4)=0, (2->0)=0, (2->11)=0, (4->2)=0, (4->8)=0, (6->2)=0, (6->13)=1, (8->6)=0, (11->13)=0, (13->15)=1, (15->6)=1, nbNodes=3, arcCount=3, 
+[0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{2, 6, 11, 13, 15}
+successors : 
+2 -> {11 }
+6 -> {2 }
+11 -> {13 }
+13 -> {15 }
+15 -> {6 }
+
+Solution: (0->4)=0, (2->0)=0, (2->11)=1, (4->2)=0, (4->8)=0, (6->2)=1, (6->13)=0, (8->6)=0, (11->13)=1, (13->15)=1, (15->6)=1, nbNodes=5, arcCount=5, 
+[0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4, 6, 8}
+successors : 
+0 -> {4 }
+2 -> {0 }
+4 -> {8 }
+6 -> {2 }
+8 -> {6 }
+
+Solution: (0->4)=1, (2->0)=1, (2->11)=0, (4->2)=0, (4->8)=1, (6->2)=1, (6->13)=0, (8->6)=1, (11->13)=0, (13->15)=0, (15->6)=0, nbNodes=5, arcCount=5, 
+[1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4}
+successors : 
+0 -> {4 }
+2 -> {0 }
+4 -> {2 }
+
+Solution: (0->4)=1, (2->0)=1, (2->11)=0, (4->2)=1, (4->8)=0, (6->2)=0, (6->13)=0, (8->6)=0, (11->13)=0, (13->15)=0, (15->6)=0, nbNodes=3, arcCount=3, 
+[1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, ]
+All alternant cycles generateds, stored in ./cycles.txt
+12 cycles of 6 edges.
+8 cycles of 10 edges.
+4 cycles of 14 edges.
+(12 * R1) + (8 * R2) + (4 * R3) + (0 * R4) + (0 * R5)

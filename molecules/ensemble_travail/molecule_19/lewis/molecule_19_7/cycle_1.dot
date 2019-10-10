@@ -1,0 +1,8 @@
+digraph g{
+node [color = red, fontcolor=red]; 6 11 13 17 19 ;
+6 -> 11 [color=red] ;
+11 -> 17 [color=red] ;
+13 -> 6 [color=red] ;
+17 -> 19 [color=red] ;
+19 -> 13 [color=red] ;
+}

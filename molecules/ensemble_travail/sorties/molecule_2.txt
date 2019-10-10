@@ -1,0 +1,83 @@
+Analizing molecule : molecules/ensemble_travail/molecule_2/molecule_2.graph
+Generating lewis structures ...
+> molecules/ensemble_travail/molecule_2/lewis/molecule_2_0.graph generated
+> molecules/ensemble_travail/molecule_2/lewis/molecule_2_1.graph generated
+> molecules/ensemble_travail/molecule_2/lewis/molecule_2_2.graph generated
+3 lewis structure generated.
+Generating alternant cycles of : molecules/ensemble_travail/molecule_2/lewis/molecule_2_0.graph
+graph_var g
+Value: 
+nodes : 
+{2, 6, 8}
+successors : 
+2 -> {6 }
+6 -> {8 }
+8 -> {2 }
+
+Solution: (0->6)=0, (2->6)=1, (2->4)=0, (4->0)=0, (6->8)=1, (8->2)=1, nbNodes=3, arcCount=3, 
+[0, 1, 0, 0, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4, 6, 8}
+successors : 
+0 -> {6 }
+2 -> {4 }
+4 -> {0 }
+6 -> {8 }
+8 -> {2 }
+
+Solution: (0->6)=1, (2->6)=0, (2->4)=1, (4->0)=1, (6->8)=1, (8->2)=1, nbNodes=5, arcCount=5, 
+[1, 0, 1, 1, 1, 1, ]
+Generating alternant cycles of : molecules/ensemble_travail/molecule_2/lewis/molecule_2_1.graph
+graph_var g
+Value: 
+nodes : 
+{2, 6, 8}
+successors : 
+2 -> {8 }
+6 -> {2 }
+8 -> {6 }
+
+Solution: (0->2)=0, (2->4)=0, (2->8)=1, (4->0)=0, (6->2)=1, (8->6)=1, nbNodes=3, arcCount=3, 
+[0, 0, 1, 0, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4}
+successors : 
+0 -> {2 }
+2 -> {4 }
+4 -> {0 }
+
+Solution: (0->2)=1, (2->4)=1, (2->8)=0, (4->0)=1, (6->2)=0, (8->6)=0, nbNodes=3, arcCount=3, 
+[1, 1, 0, 1, 0, 0, ]
+Generating alternant cycles of : molecules/ensemble_travail/molecule_2/lewis/molecule_2_2.graph
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4, 6, 8}
+successors : 
+0 -> {4 }
+2 -> {8 }
+4 -> {2 }
+6 -> {0 }
+8 -> {6 }
+
+Solution: (0->4)=1, (2->0)=0, (2->8)=1, (4->2)=1, (6->0)=1, (8->6)=1, nbNodes=5, arcCount=5, 
+[1, 0, 1, 1, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4}
+successors : 
+0 -> {4 }
+2 -> {0 }
+4 -> {2 }
+
+Solution: (0->4)=1, (2->0)=1, (2->8)=0, (4->2)=1, (6->0)=0, (8->6)=0, nbNodes=3, arcCount=3, 
+[1, 1, 0, 1, 0, 0, ]
+All alternant cycles generateds, stored in ./cycles.txt
+4 cycles of 6 edges.
+2 cycles of 10 edges.
+(4 * R1) + (2 * R2) + (0 * R3) + (0 * R4) + (0 * R5)

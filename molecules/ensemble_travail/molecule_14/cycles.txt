@@ -1,0 +1,5 @@
+30 cycles of 6 edges. 
+18 cycles of 10 edges. 
+6 cycles of 14 edges. 
+1 cycles of 18 edges. 
+(0 * R1) + (0 * R2) + (0 * R3) + (0 * R4) + (0 * R5)

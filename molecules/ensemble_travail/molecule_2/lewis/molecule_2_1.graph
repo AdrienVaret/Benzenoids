@@ -1,0 +1,13 @@
+c molecules/ensemble_travail/molecule_2/lewis/molecule_2_1.graph
+p DIMACS 10 11
+e 1 2 0
+e 2 3 1
+e 3 4 0
+e 4 5 1
+e 5 6 0
+e 6 1 1
+e 2 7 0
+e 7 8 1
+e 8 9 0
+e 9 10 1
+e 10 3 0

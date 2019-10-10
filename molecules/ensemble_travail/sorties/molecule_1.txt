@@ -1,0 +1,32 @@
+Analizing molecule : molecules/ensemble_travail/molecule_1/molecule_1.graph
+Generating lewis structures ...
+> molecules/ensemble_travail/molecule_1/lewis/molecule_1_0.graph generated
+> molecules/ensemble_travail/molecule_1/lewis/molecule_1_1.graph generated
+2 lewis structure generated.
+Generating alternant cycles of : molecules/ensemble_travail/molecule_1/lewis/molecule_1_0.graph
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4}
+successors : 
+0 -> {2 }
+2 -> {4 }
+4 -> {0 }
+
+Solution: (0->2)=1, (2->4)=1, (4->0)=1, nbNodes=3, arcCount=3, 
+[1, 1, 1, ]
+Generating alternant cycles of : molecules/ensemble_travail/molecule_1/lewis/molecule_1_1.graph
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4}
+successors : 
+0 -> {4 }
+2 -> {0 }
+4 -> {2 }
+
+Solution: (0->4)=1, (2->0)=1, (4->2)=1, nbNodes=3, arcCount=3, 
+[1, 1, 1, ]
+All alternant cycles generateds, stored in ./cycles.txt
+2 cycles of 6 edges.
+(2 * R1) + (0 * R2) + (0 * R3) + (0 * R4) + (0 * R5)

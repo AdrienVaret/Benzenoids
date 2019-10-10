@@ -158,6 +158,9 @@ public class BenzenoidsGenerator {
 		while(solver.solve()) {
 			Solution solution = new Solution(model);
 			solution.record();
+			System.out.println(solution);
+			System.out.println("\n\n" + subgraph);
+			SolutionConverter converter = new SolutionConverter(solution, dimension, taille);
 			solutionStack.push(solution);
 		}
 		

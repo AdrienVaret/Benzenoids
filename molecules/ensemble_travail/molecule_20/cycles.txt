@@ -1,0 +1,3 @@
+24 cycles of 6 edges. 
+12 cycles of 10 edges. 
+(0 * R1) + (0 * R2) + (0 * R3) + (0 * R4) + (0 * R5)

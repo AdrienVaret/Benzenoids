@@ -174,6 +174,7 @@ public class BenzenoidsSolver {
 		while(solver.solve()) {
 			Solution solution = new Solution(model);
 			solution.record();
+			System.out.print(solution);
 			molecules.add(solution);
 		}
 	}
@@ -464,16 +465,39 @@ public class BenzenoidsSolver {
 		countCycles(cycles);
 	}
 	
+	public static int getR(int nbEdges) {
+		int n = 1;
+		while (true) {
+			if (nbEdges == (4 * n + 2)) return n - 1;
+			n ++;
+		}
+	}
+	
 	public static void displayCycles(String directory) {
 		System.out.println("All alternant cycles generateds, stored in ./cycles.txt");
 		try {
+			int [] R = new int [5];
 			BufferedWriter w = new BufferedWriter(new FileWriter(new File(directory + "/cycles.txt")));
 			for (int i = 0 ; i < cyclesCount.length ; i++) {
 				if (cyclesCount[i] > 0) {
 					w.write(cyclesCount[i] + " cycles of " + i + " edges. \n");
 					System.out.println(cyclesCount[i] + " cycles of " + i + " edges.");
+					R[getR(i)] += cyclesCount[i];
 				}
 			}
+			
+			for (int i = 0 ; i < R.length ; i++) {
+				w.write("(" + cyclesCount[i] + " * R" + (i+1) + ")");
+				System.out.print("(" + R[i] + " * R" + (i+1) + ")");
+				if (i < R.length - 1) {
+					w.write(" + ");
+					System.out.print(" + ");
+				}
+			}
+			
+			w.write("\n");
+			System.out.println("");
+			
 			w.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -525,9 +549,12 @@ public class BenzenoidsSolver {
 	}
 	
 	public static void main(String [] args) {
-		//analyzeMolecule("molecules/benzene/benzene.graph");
-		//analyzeMolecule("molecules/phenanthrene/phenanthrene.graph");
-		//analyzeMolecule("molecules/3_hexa/3_hexa.graph");
-		analyzeMolecule("molecules/benzanthracene/benzanthracene.graph");
+		if (args.length == 0) 
+			displayUsage();
+		
+		
+		String path = args[0];
+		analyzeMolecule(path);
+		//analyzeMolecule("molecules/ensemble_travail/molecule_8/molecule_8.graph");
  	}
 }

@@ -1,0 +1,164 @@
+Analizing molecule : molecules/ensemble_travail/molecule_3/molecule_3.graph
+Generating lewis structures ...
+> molecules/ensemble_travail/molecule_3/lewis/molecule_3_0.graph generated
+> molecules/ensemble_travail/molecule_3/lewis/molecule_3_1.graph generated
+> molecules/ensemble_travail/molecule_3/lewis/molecule_3_2.graph generated
+> molecules/ensemble_travail/molecule_3/lewis/molecule_3_3.graph generated
+4 lewis structure generated.
+Generating alternant cycles of : molecules/ensemble_travail/molecule_3/lewis/molecule_3_0.graph
+graph_var g
+Value: 
+nodes : 
+{8, 10, 12}
+successors : 
+8 -> {10 }
+10 -> {12 }
+12 -> {8 }
+
+Solution: (0->6)=0, (2->6)=0, (2->4)=0, (4->0)=0, (6->10)=0, (8->10)=1, (8->2)=0, (10->12)=1, (12->8)=1, nbNodes=3, arcCount=3, 
+[0, 0, 0, 0, 0, 1, 0, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{2, 6, 8, 10, 12}
+successors : 
+2 -> {6 }
+6 -> {10 }
+8 -> {2 }
+10 -> {12 }
+12 -> {8 }
+
+Solution: (0->6)=0, (2->6)=1, (2->4)=0, (4->0)=0, (6->10)=1, (8->10)=0, (8->2)=1, (10->12)=1, (12->8)=1, nbNodes=5, arcCount=5, 
+[0, 1, 0, 0, 1, 0, 1, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4, 6, 8, 10, 12}
+successors : 
+0 -> {6 }
+2 -> {4 }
+4 -> {0 }
+6 -> {10 }
+8 -> {2 }
+10 -> {12 }
+12 -> {8 }
+
+Solution: (0->6)=1, (2->6)=0, (2->4)=1, (4->0)=1, (6->10)=1, (8->10)=0, (8->2)=1, (10->12)=1, (12->8)=1, nbNodes=7, arcCount=7, 
+[1, 0, 1, 1, 1, 0, 1, 1, 1, ]
+Generating alternant cycles of : molecules/ensemble_travail/molecule_3/lewis/molecule_3_1.graph
+graph_var g
+Value: 
+nodes : 
+{8, 10, 12}
+successors : 
+8 -> {12 }
+10 -> {8 }
+12 -> {10 }
+
+Solution: (0->6)=0, (2->6)=0, (2->4)=0, (4->0)=0, (6->8)=0, (8->2)=0, (8->12)=1, (10->8)=1, (12->10)=1, nbNodes=3, arcCount=3, 
+[0, 0, 0, 0, 0, 0, 1, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{2, 6, 8}
+successors : 
+2 -> {6 }
+6 -> {8 }
+8 -> {2 }
+
+Solution: (0->6)=0, (2->6)=1, (2->4)=0, (4->0)=0, (6->8)=1, (8->2)=1, (8->12)=0, (10->8)=0, (12->10)=0, nbNodes=3, arcCount=3, 
+[0, 1, 0, 0, 1, 1, 0, 0, 0, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4, 6, 8}
+successors : 
+0 -> {6 }
+2 -> {4 }
+4 -> {0 }
+6 -> {8 }
+8 -> {2 }
+
+Solution: (0->6)=1, (2->6)=0, (2->4)=1, (4->0)=1, (6->8)=1, (8->2)=1, (8->12)=0, (10->8)=0, (12->10)=0, nbNodes=5, arcCount=5, 
+[1, 0, 1, 1, 1, 1, 0, 0, 0, ]
+Generating alternant cycles of : molecules/ensemble_travail/molecule_3/lewis/molecule_3_2.graph
+graph_var g
+Value: 
+nodes : 
+{2, 6, 8, 10, 12}
+successors : 
+2 -> {8 }
+6 -> {2 }
+8 -> {12 }
+10 -> {6 }
+12 -> {10 }
+
+Solution: (0->2)=0, (2->4)=0, (2->8)=1, (4->0)=0, (6->2)=1, (8->6)=0, (8->12)=1, (10->6)=1, (12->10)=1, nbNodes=5, arcCount=5, 
+[0, 0, 1, 0, 1, 0, 1, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{2, 6, 8}
+successors : 
+2 -> {8 }
+6 -> {2 }
+8 -> {6 }
+
+Solution: (0->2)=0, (2->4)=0, (2->8)=1, (4->0)=0, (6->2)=1, (8->6)=1, (8->12)=0, (10->6)=0, (12->10)=0, nbNodes=3, arcCount=3, 
+[0, 0, 1, 0, 1, 1, 0, 0, 0, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4}
+successors : 
+0 -> {2 }
+2 -> {4 }
+4 -> {0 }
+
+Solution: (0->2)=1, (2->4)=1, (2->8)=0, (4->0)=1, (6->2)=0, (8->6)=0, (8->12)=0, (10->6)=0, (12->10)=0, nbNodes=3, arcCount=3, 
+[1, 1, 0, 1, 0, 0, 0, 0, 0, ]
+Generating alternant cycles of : molecules/ensemble_travail/molecule_3/lewis/molecule_3_3.graph
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4, 6, 8, 10, 12}
+successors : 
+0 -> {4 }
+2 -> {8 }
+4 -> {2 }
+6 -> {0 }
+8 -> {12 }
+10 -> {6 }
+12 -> {10 }
+
+Solution: (0->4)=1, (2->0)=0, (2->8)=1, (4->2)=1, (6->0)=1, (8->6)=0, (8->12)=1, (10->6)=1, (12->10)=1, nbNodes=7, arcCount=7, 
+[1, 0, 1, 1, 1, 0, 1, 1, 1, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4, 6, 8}
+successors : 
+0 -> {4 }
+2 -> {8 }
+4 -> {2 }
+6 -> {0 }
+8 -> {6 }
+
+Solution: (0->4)=1, (2->0)=0, (2->8)=1, (4->2)=1, (6->0)=1, (8->6)=1, (8->12)=0, (10->6)=0, (12->10)=0, nbNodes=5, arcCount=5, 
+[1, 0, 1, 1, 1, 1, 0, 0, 0, ]
+graph_var g
+Value: 
+nodes : 
+{0, 2, 4}
+successors : 
+0 -> {4 }
+2 -> {0 }
+4 -> {2 }
+
+Solution: (0->4)=1, (2->0)=1, (2->8)=0, (4->2)=1, (6->0)=0, (8->6)=0, (8->12)=0, (10->6)=0, (12->10)=0, nbNodes=3, arcCount=3, 
+[1, 1, 0, 1, 0, 0, 0, 0, 0, ]
+All alternant cycles generateds, stored in ./cycles.txt
+6 cycles of 6 edges.
+4 cycles of 10 edges.
+2 cycles of 14 edges.
+(6 * R1) + (4 * R2) + (2 * R3) + (0 * R4) + (0 * R5)
