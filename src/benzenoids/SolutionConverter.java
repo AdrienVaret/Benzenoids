@@ -1,7 +1,10 @@
 package benzenoids;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import org.chocosolver.solver.Solution;
@@ -9,18 +12,24 @@ import org.chocosolver.solver.Solution;
 public class SolutionConverter {
 
 	private Solution solution;
+	@SuppressWarnings("unused")
 	private int nbCrowns;
-	private int size;
+	private int diameter;
 	
 	private int [][] edges;
 	private int [] nodes;
 	private ArrayList<Integer> nodesSolution;
 	private ArrayList<ArrayList<Integer>> hexagons;
 	
-	public SolutionConverter(Solution solution, int nbCrowns, int size) {
+	private int nbNodes;
+	private int nbEdges;
+	private int nbHexagons;
+	private int maxVertexId = -1;
+	
+	public SolutionConverter(Solution solution, int nbCrowns, int size, String outputFileName) {
 		this.solution = solution;
 		this.nbCrowns = nbCrowns;
-		this.size = size;
+		this.diameter = size;
 		
 		nodesSolution = new ArrayList<Integer>();
 		hexagons = new ArrayList<ArrayList<Integer>>();
@@ -29,6 +38,8 @@ public class SolutionConverter {
 		
 		readSolution();
 		createMolecule();
+		exportToDimacs(outputFileName + "_" + nbHexagons + "_hexagons.graph");
+		System.out.println("\t> " + outputFileName + "_" + nbHexagons + "_hexagons.graph" + " generated.");
 	}
 	
 	public void readSolution() {
@@ -67,162 +78,200 @@ public class SolutionConverter {
 		return nbNodes;
 	}
 	
+	public int countEdges() {
+		int nbEdges = 0;
+		
+		for (int i = 0 ; i < edges.length ; i++) {
+			for (int j = i + 1 ; j < edges[i].length ; j++) {
+				if (edges[i][j] == 1) nbEdges ++;
+			}
+		}
+		
+		return nbEdges;
+	}
+	
+	public void updateGraph(int vertex1, int vertex2) {
+		System.out.println(vertex1 + " -- " + vertex2);
+		edges[vertex1][vertex2] = 1;
+		edges[vertex2][vertex1] = 1;
+		nodes[vertex1] = 1;
+		nodes[vertex2] = 1;
+	}
+	
+	public int max(int H, int HD, int BD, int B, int BG, int HG) {
+		
+		int [] array = new int [6];
+		array[0] = H;
+		array[1] = HD;
+		array[2] = BD;
+		array[3] = B;
+		array[4] = BG;
+		array[5] = HG;
+		
+		int max = -1;
+		
+		for (int i = 0 ; i < array.length ; i++) {
+			if (array[i] > max) max = array[i];
+		}
+		
+		return max;
+	}
+	
 	public void createMolecule() {
-		int haut, hautdroit, basdroit, bas, basgauche, hautgauche;
+		
+		int H, HD, BD, B, BG, HG;
 		
 		int k = 0;
 		
-		for (int j = 0 ; j < size ; j++) {
-			for (int i = 0 ; i < size ; i++) {
+		for (int j = 0 ; j < diameter ; j++) {
+			for (int i = 0 ; i < diameter ; i++) {
 				
 				if (j == 0) {
-					haut = k;
-					hautdroit = k + 1;
-					basdroit = k + 2;
-					bas = k + 3;
+					H = k;
+					HD = k + 1;
+					BD = k + 2;
+					B = k + 3;
 					
 					if (i == 0) {
-						basgauche = k + 4;
-						hautgauche = k + 5;
+						BG = k + 4;
+						HG = k + 5;
 					} else {
-						basgauche = k - 4;
-						hautgauche = k - 5;
+						BG = k - 4;
+						HG = k - 5;
 					}
 				}
 				
 				else {
 					
 					if (i == 0) {
-						haut = k + 4 - 6 * size;
-						basgauche = k + 4;
-			            hautgauche = k + 5;
+						H = k + 4 - 6 * diameter;
+						BG = k + 4;
+			            HG = k + 5;
 					}
 					
 					else {
-						haut = k + 2 - 6 * (size + 1);
-			            basgauche = k - 4;
-			            hautgauche = k + 3 - 6 * (size + 1);
+						H = k + 2 - 6 * (diameter + 1);
+			            BG = k - 4;
+			            HG = k + 3 - 6 * (diameter + 1);
 					}
 					
-					hautdroit = k + 3 - 6 * size;
-			        basdroit = k + 2;
-			        bas = k + 3;
+					HD = k + 3 - 6 * diameter;
+			        BD = k + 2;
+			        B = k + 3;
 				}
 				
-				if (nodesSolution.get(xy2i(i, j, size)) == 1) {
+				if (nodesSolution.get(xy2i(i, j, diameter)) == 1) {
 					
 					ArrayList<Integer> hexagon = new ArrayList<Integer>();
-					hexagon.add(haut);
-					hexagon.add(hautdroit);
-					hexagon.add(basdroit);
-					hexagon.add(bas);
-					hexagon.add(basgauche);
-					hexagon.add(hautgauche);
+					hexagon.add(H);
+					hexagon.add(HD);
+					hexagon.add(BD);
+					hexagon.add(B);
+					hexagon.add(BG);
+					hexagon.add(HG);
 					hexagons.add(hexagon);
+					
+					int max = max(H, HD, BD, B, BG, HG);
+					if (max > maxVertexId)
+						maxVertexId = max;
 					
 					int vertex1, vertex2;
 					
-					if (haut < hautdroit) {
-						vertex1 = haut;
-						vertex2 = hautdroit;
-						//System.out.println(haut + " -- " + hautdroit);
+					if (H < HD) {
+						vertex1 = H;
+						vertex2 = HD;
 					} else {
-						vertex2 = haut;
-						vertex1 = hautdroit;
-						//System.out.println(hautdroit + " -- " + haut);
+						vertex2 = H;
+						vertex1 = HD;
 					}
 					
-					System.out.println(vertex1 + " -- " + vertex2);
-					edges[vertex1][vertex2] = 1;
-					edges[vertex2][vertex1] = 1;
-					nodes[vertex1] = 1;
-					nodes[vertex2] = 1;
+					updateGraph(vertex1, vertex2);
 					
-					if (hautdroit < basdroit) {
-						vertex1 = hautdroit;
-						vertex2 = basdroit;
-						//System.out.println(hautdroit + " -- " + basdroit);
+					if (HD < BD) {
+						vertex1 = HD;
+						vertex2 = BD;
 					} else {
-						vertex2 = hautdroit;
-						vertex1 = basdroit;
-						//System.out.println(basdroit + " -- " + hautdroit);
+						vertex2 = HD;
+						vertex1 = BD;
 					}
 					
-					System.out.println(vertex1 + " -- " + vertex2);
-					edges[vertex1][vertex2] = 1;
-					edges[vertex2][vertex1] = 1;
-					nodes[vertex1] = 1;
-					nodes[vertex2] = 1;
+					updateGraph(vertex1, vertex2);
 					
-					if (basdroit < bas) {
-						vertex1 = basdroit;
-						vertex2 = bas;
-						//System.out.println(basdroit + " -- " + bas);
+					if (BD < B) {
+						vertex1 = BD;
+						vertex2 = B;
 					} else {
-						vertex2 = basdroit;
-						vertex1 = bas;
-						//System.out.println(bas + " -- " + basdroit);
+						vertex2 = BD;
+						vertex1 = B;
 					}
 					
-					System.out.println(vertex1 + " -- " + vertex2);
-					edges[vertex1][vertex2] = 1;
-					edges[vertex2][vertex1] = 1;
-					nodes[vertex1] = 1;
-					nodes[vertex2] = 1;
+					updateGraph(vertex1, vertex2);
 					
-					if (bas < basgauche) {
-						vertex1 = bas;
-						vertex2 = basgauche;
-						//System.out.println(bas + " -- " + basgauche);
+					if (B < BG) {
+						vertex1 = B;
+						vertex2 = BG;
 					} else {
-						vertex2 = bas;
-						vertex1 = basgauche;
-						//System.out.println(basgauche + " -- " + bas);
+						vertex2 = B;
+						vertex1 = BG;
 					}
 					
-					System.out.println(vertex1 + " -- " + vertex2);
-					edges[vertex1][vertex2] = 1;
-					edges[vertex2][vertex1] = 1;
-					nodes[vertex1] = 1;
-					nodes[vertex2] = 1;
+					updateGraph(vertex1, vertex2);
 					
-					if (basgauche < hautgauche) {
-						vertex1 = basgauche;
-						vertex2 = hautgauche;
-						//System.out.println(basgauche + " -- " + hautgauche);
+					if (BG < HG) {
+						vertex1 = BG;
+						vertex2 = HG;
 					} else {
-						vertex2 = basgauche;
-						vertex1 = hautgauche;
-						//System.out.println(hautgauche + " -- " + basgauche);
+						vertex2 = BG;
+						vertex1 = HG;
 					}
 					
-					System.out.println(vertex1 + " -- " + vertex2);
-					edges[vertex1][vertex2] = 1;
-					edges[vertex2][vertex1] = 1;
-					nodes[vertex1] = 1;
-					nodes[vertex2] = 1;
+					updateGraph(vertex1, vertex2);
 					
-					if (hautgauche < haut) {
-						vertex1 = hautgauche;
-						vertex2 = haut;
-						//System.out.println(hautgauche + " -- " + haut);
+					if (HG < H) {
+						vertex1 = HG;
+						vertex2 = H;
 					} else {
-						vertex2 = hautgauche;
-						vertex1 = haut;
-						//System.out.println(haut + " -- " + hautgauche);
+						vertex2 = HG;
+						vertex1 = H;
 					}
-					
-					System.out.println(vertex1 + " -- " + vertex2);
-					edges[vertex1][vertex2] = 1;
-					edges[vertex2][vertex1] = 1;
-					nodes[vertex1] = 1;
-					nodes[vertex2] = 1;
-					
+
+					updateGraph(vertex1, vertex2);
 				}
 				k = k + 6;
 			}
 		}
-		int nbNodes = countNodes();
-		System.out.println("");
+		
+		nbNodes = countNodes();
+		nbEdges = countEdges();
+		nbHexagons = hexagons.size();
 	}
+	
+	public void exportToDimacs(String outputFileName) {
+		try {
+			BufferedWriter w = new BufferedWriter(new FileWriter(new File(outputFileName)));
+			
+			w.write("p DIMACS " + nbNodes + " " + nbEdges + " " + nbHexagons + " " + (maxVertexId+1) + "\n");
+			
+			for (int i = 0 ; i < edges.length ; i++) {
+				for (int j = i + 1 ; j < edges[i].length ; j ++) {
+					if (edges[i][j] == 1) {
+						w.write("e " + (i+1) + " " + (j+1) + "\n");
+					}
+				}
+			}
+			
+			for (ArrayList<Integer> hexagon : hexagons) {
+				w.write("h ");
+				for (Integer i : hexagon) {
+					w.write((i+1) + " ");
+				}
+				w.write("\n");
+			}
+			
+			w.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

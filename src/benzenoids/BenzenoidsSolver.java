@@ -185,7 +185,9 @@ public class BenzenoidsSolver {
 		return name[name.length-1];
 	}
 	
-	public static ArrayList<String> generateLewisStructures(String path, String outputDirectory) {
+	
+	
+	public static ArrayList<String> generateLewisStructures(String path, String outputDirectory, boolean allSolutions) {
 		
 		UndirGraph graph = GraphParser.parseUndirectedGraph(path);
 		Model model = new Model("Lewis Structures");
@@ -234,6 +236,9 @@ public class BenzenoidsSolver {
 			System.out.println("> " + filename + " generated");
 			
 			i++;
+			
+			if (!allSolutions)
+				break;
 		}
 		
 		return paths;
@@ -505,6 +510,17 @@ public class BenzenoidsSolver {
 		
 	}
 	
+	public static void computeOneKekuleStructure(String filename) {
+		
+		System.out.println("Computing one Kekule's structure of : " + filename);
+		
+		String [] splittedFilename = filename.split(Pattern.quote("."));
+		String outputFileName = splittedFilename[0] + "_structure.graph";
+		
+		//ArrayList<String> kekuleStructures = generateLewisStructure
+		
+	}
+	
 	public static void analyzeMolecule(String filename){
 		
 		System.out.println("Analizing molecule : " + filename);
@@ -525,7 +541,7 @@ public class BenzenoidsSolver {
 		
 		System.out.println("Generating lewis structures ...");
 		
-		ArrayList<String> lewisStructures = generateLewisStructures(filename, lewisDirectoryName);
+		ArrayList<String> lewisStructures = generateLewisStructures(filename, lewisDirectoryName, true);
 		
 		System.out.println(lewisStructures.size() + " lewis structure generated.");
 		

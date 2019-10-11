@@ -7,9 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import org.chocosolver.solver.Solution;
-
 import graphs.UndirGraph;
 import graphs.UndirPonderateGraph;
 import utils.Couple;
@@ -26,14 +23,18 @@ public class GraphParser {
 		
 		try {
 			
-			int nbNodes = 0, nbEdges = 0;
+			int nbNodes = 0, nbEdges = 0, nbHexagons = 0, maxVertexId = 0;
 			
 			BufferedReader r = new BufferedReader(new FileReader(new File(path)));
 			String line;
 			boolean firstLine = true;
 			
 			ArrayList<String> edgesString = new ArrayList<String>();
+			ArrayList<String> hexagonsString = new ArrayList<String>();
 			ArrayList<ArrayList<Integer>> edgeMatrix = new ArrayList<ArrayList<Integer>>();
+			
+			int [] activeNodes = null;
+			
 			int idEdge = 0;
 			
 			while ((line = r.readLine()) != null) {
@@ -46,29 +47,45 @@ public class GraphParser {
 						firstLine = false;
 						nbNodes = Integer.parseInt(splittedLine[2]);
 						nbEdges = Integer.parseInt(splittedLine[3]);
+						nbHexagons = Integer.parseInt(splittedLine[4]);
+						maxVertexId = Integer.parseInt(splittedLine[5]);
 						
-						for (int i = 0 ; i < nbNodes ; i++) {
+						activeNodes = new int[maxVertexId];
+						
+						//for (int i = 0 ; i < nbNodes ; i++) {
+						for (int i = 0 ; i < maxVertexId ; i++) { 
 							edgeMatrix.add(new ArrayList<Integer>());
 						}
 					}
 					
 					else {
-						edgesString.add(line);
+						//If we are reading edges
+						if (idEdge < nbEdges) {
+							edgesString.add(line);
 						
-						int u = Integer.parseInt(splittedLine[1]) - 1;
-						int v = Integer.parseInt(splittedLine[2]) - 1;
+							int u = Integer.parseInt(splittedLine[1]) - 1;
+							int v = Integer.parseInt(splittedLine[2]) - 1;
 						
-						edgeMatrix.get(u).add(idEdge);
-						edgeMatrix.get(v).add(idEdge);
+							activeNodes[u] = 1;
+							activeNodes[v] = 1;
+							
+							edgeMatrix.get(u).add(idEdge);
+							edgeMatrix.get(v).add(idEdge);
 						
-						idEdge ++;
+							idEdge ++;
+						} 
+						
+						//If we are reading hexagons
+						else {
+							hexagonsString.add(line);
+						}
 					}
 				}
 				
 			}
 			
 			r.close();
-			return new UndirGraph(nbNodes, nbEdges, edgeMatrix, edgesString);
+			return new UndirGraph(nbNodes, nbEdges, nbHexagons, edgeMatrix, edgesString, hexagonsString, activeNodes);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -132,6 +149,7 @@ public class GraphParser {
 		
 		int nbNodes = initialGraph.getNbNodes();
 		int nbEdges = initialGraph.getNbEdges();
+		int nbHexagons = initialGraph.getNbHexagons();
 		
 		try {
 			BufferedWriter w = new BufferedWriter(new FileWriter(new File(path)));
@@ -144,9 +162,12 @@ public class GraphParser {
 				w.write(edge + " " + edgesValues[i] + "\n");
 			}
 			
+			for (int i = 0 ; i < nbHexagons ; i++) {
+				w.write(initialGraph.getHexagonsString().get(i) + "\n");
+			}
+			
 			w.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
