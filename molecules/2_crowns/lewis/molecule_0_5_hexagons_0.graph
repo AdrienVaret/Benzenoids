@@ -1,4 +1,4 @@
-c molecules/2_crowns/molecule_0_5_hexagons_structure.graph
+c molecules/2_crowns/lewis/molecule_0_5_hexagons_0.graph
 p DIMACS 22 26 5 52
 e 2 3 0
 e 2 7 1

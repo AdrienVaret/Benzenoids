@@ -32,12 +32,10 @@ public static String computeOneKekuleStructure(String filename) {
 			edges[i] = model.boolVar("edge " + (i+1));
 		}
 		
-		//for (int i = 0 ; i < graph.getNbNodes() ; i++) {
 		for (int i = 0 ; i < graph.getEdgeMatrix().size() ; i++) {
 				if (graph.isActive(i)) {
 					int nbAdjacentEdges = graph.getEdgeMatrix().get(i).size();
 			
-			//if (nbAdjacentEdges > 0) {
 					BoolVar [] adjacentEdges = new BoolVar[nbAdjacentEdges];
 			
 					for (int j = 0 ; j < nbAdjacentEdges ; j++) {
@@ -45,7 +43,6 @@ public static String computeOneKekuleStructure(String filename) {
 					}
 			
 					model.sum(adjacentEdges, "=", 1).post();
-			//}
 				}
 		}
 			

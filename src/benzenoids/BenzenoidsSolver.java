@@ -202,15 +202,18 @@ public class BenzenoidsSolver {
 			edges[i] = model.boolVar("edge " + (i+1));
 		}
 		
-		for (int i = 0 ; i < graph.getNbNodes() ; i++) {
-			int nbAdjacentEdges = graph.getEdgeMatrix().get(i).size();
-			BoolVar [] adjacentEdges = new BoolVar[nbAdjacentEdges];
+		//for (int i = 0 ; i < graph.getNbNodes() ; i++) {
+		for (int i = 0 ; i < graph.getEdgeMatrix().size() ; i++) {
+			if (graph.isActive(i)) {
+				int nbAdjacentEdges = graph.getEdgeMatrix().get(i).size();
+				BoolVar [] adjacentEdges = new BoolVar[nbAdjacentEdges];
+				
+				for (int j = 0 ; j < nbAdjacentEdges ; j++) {
+					adjacentEdges[j] = edges[graph.getEdgeMatrix().get(i).get(j)];
+				}
 			
-			for (int j = 0 ; j < nbAdjacentEdges ; j++) {
-				adjacentEdges[j] = edges[graph.getEdgeMatrix().get(i).get(j)];
+				model.sum(adjacentEdges, "=", 1).post();
 			}
-			
-			model.sum(adjacentEdges, "=", 1).post();
 		}
 			
 		model.getSolver().setSearch(new IntStrategy(edges, new FirstFail(model), new IntDomainMin()));
@@ -334,15 +337,30 @@ public class BenzenoidsSolver {
 		
 		int nbNode = graph.getNbNodes();
 		
-		int [] nodesSet = new int[nbNode];
-		int [] visitedNodes = new int[nbNode];
+		//int [] nodesSet = new int[nbNode];
+		//int [] visitedNodes = new int[nbNode];
+		
+		int [] nodesSet = new int[graph.getNodesMatrix().size()];
+		int [] visitedNodes = new int[graph.getNodesMatrix().size()];
 		
 		int deep = 0;
 		int n = 0;
 		
 		ArrayList<Integer> q = new ArrayList<Integer>();
-		q.add(0);
-		visitedNodes[0] = 1;
+		//q.add(0);
+		
+		int firstNode = -1;
+		for (int i = 0 ; i < graph.getNodesMatrix().size() ; i++) {
+			if (graph.getNodesMatrix().get(i).size() > 0) {
+				firstNode = i;
+				break;
+			}
+		}
+		
+		q.add(firstNode);
+		
+		//visitedNodes[0] = 1;
+		visitedNodes[firstNode] = 1;
 		
 		int count = 1;
 	
@@ -378,7 +396,8 @@ public class BenzenoidsSolver {
 		
 		//Récupérer l'ensemble des couples d'arêtes alternantes
 		ArrayList<DirectedEdge> edges = new ArrayList<DirectedEdge>();
-		for (int u = 0 ; u < nbNode ; u++) {
+		//for (int u = 0 ; u < nbNode ; u++) {
+		for (int u = 0 ; u < graph.getNodesMatrix().size() ; u ++) {
 			if (nodesSet[u] == 1) {
 				
 				for (Couple<Integer> couple : graph.getNodesMatrix().get(u)) { //Couples (sommet, liaison)
@@ -398,10 +417,14 @@ public class BenzenoidsSolver {
 		}
 		
 		//Créer le problème
+		//TODO: gérer les trou dans les noeuds
 		GraphModel model = new GraphModel("Alternant Cycles");
 		
-		DirectedGraph GLB = new DirectedGraph(model, nbNode, SetType.BITSET, false);
-		DirectedGraph GUB = new DirectedGraph(model, nbNode, SetType.BITSET, false);
+		//DirectedGraph GLB = new DirectedGraph(model, nbNode, SetType.BITSET, false);
+		//DirectedGraph GUB = new DirectedGraph(model, nbNode, SetType.BITSET, false);
+		
+		DirectedGraph GLB = new DirectedGraph(model, graph.getNodesMatrix().size(), SetType.BITSET, false);
+		DirectedGraph GUB = new DirectedGraph(model, graph.getNodesMatrix().size(), SetType.BITSET, false);
 		
 		for (int i = 0 ; i < nbNode ; i ++) {
 			if (nodesSet[i] == 1) {
@@ -510,17 +533,6 @@ public class BenzenoidsSolver {
 		
 	}
 	
-	public static void computeOneKekuleStructure(String filename) {
-		
-		System.out.println("Computing one Kekule's structure of : " + filename);
-		
-		String [] splittedFilename = filename.split(Pattern.quote("."));
-		String outputFileName = splittedFilename[0] + "_structure.graph";
-		
-		//ArrayList<String> kekuleStructures = generateLewisStructure
-		
-	}
-	
 	public static void analyzeMolecule(String filename){
 		
 		System.out.println("Analizing molecule : " + filename);
@@ -569,8 +581,8 @@ public class BenzenoidsSolver {
 			displayUsage();
 		
 		
-		String path = args[0];
-		analyzeMolecule(path);
-		//analyzeMolecule("molecules/ensemble_travail/molecule_8/molecule_8.graph");
+		//String path = args[0];
+		//analyzeMolecule(path);
+		analyzeMolecule("molecules/2_crowns/molecule_0_5_hexagons.graph");
  	}
 }

@@ -98,13 +98,15 @@ public class GraphParser {
 		
 		try {
 			
-			int nbNodes = 0, nbEdges = 0;
+			int nbNodes = 0, nbEdges = 0, maxVertexId = 0;
 			
 			BufferedReader r = new BufferedReader(new FileReader(new File(path)));
 			String line;
 			boolean firstLine = true;
 			
 			ArrayList<ArrayList<Couple<Integer>>> edgeNodes = new ArrayList<ArrayList<Couple<Integer>>>();
+			
+			int nbAddedEdges = 0;
 			
 			while ((line = r.readLine()) != null) {
 				
@@ -117,12 +119,19 @@ public class GraphParser {
 						nbNodes = Integer.parseInt(splittedLine[2]);
 						nbEdges = Integer.parseInt(splittedLine[3]);
 						
-						for (int i = 0 ; i < nbNodes ; i++) {
+						if (splittedLine.length >= 6) {
+							maxVertexId = Integer.parseInt(splittedLine[5]);
+						} else {
+							maxVertexId = nbNodes;
+						}
+						
+						//for (int i = 0 ; i < nbNodes ; i++) {
+						for (int i = 0 ; i < maxVertexId ; i++) {
 							edgeNodes.add(new ArrayList<Couple<Integer>>());
 						}
 					}
 					
-					else {
+					else if (nbAddedEdges < nbEdges){
 						int u = Integer.parseInt(splittedLine[1]) - 1;
 						int v = Integer.parseInt(splittedLine[2]) - 1;
 						int w = Integer.parseInt(splittedLine[3]);
@@ -130,6 +139,7 @@ public class GraphParser {
 						edgeNodes.get(u).add(new Couple<Integer>(v, w));
 						edgeNodes.get(v).add(new Couple<Integer>(u, w));
 
+						nbAddedEdges ++;
 					}
 				}
 				
@@ -150,12 +160,13 @@ public class GraphParser {
 		int nbNodes = initialGraph.getNbNodes();
 		int nbEdges = initialGraph.getNbEdges();
 		int nbHexagons = initialGraph.getNbHexagons();
+		int maxVertexId = initialGraph.getEdgeMatrix().size();
 		
 		try {
 			BufferedWriter w = new BufferedWriter(new FileWriter(new File(path)));
 			
 			w.write("c " + path + "\n");
-			w.write("p DIMACS " + nbNodes + " " + nbEdges + "\n");
+			w.write("p DIMACS " + nbNodes + " " + nbEdges + " " + nbHexagons + " " + maxVertexId + "\n");
 			
 			for (int i = 0 ; i < nbEdges ; i++) {
 				String edge = initialGraph.getEdgesString().get(i);

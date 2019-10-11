@@ -17,6 +17,7 @@ public class UndirGraph {
 			          ArrayList<String> hexagonsString) {
 		this.nbNodes = nbNodes;
 		this.nbEdges = nbEdges;
+		this.nbHexagons = nbHexagons;
 		this.edgeMatrix = edgeMatrix;
 		this.edgesString = edgesString;
 		this.hexagonsString = hexagonsString;
@@ -27,6 +28,7 @@ public class UndirGraph {
 	          ArrayList<String> hexagonsString, int [] activeNodes) {
 		this.nbNodes = nbNodes;
 		this.nbEdges = nbEdges;
+		this.nbHexagons = nbHexagons;
 		this.edgeMatrix = edgeMatrix;
 		this.edgesString = edgesString;
 		this.hexagonsString = hexagonsString;
