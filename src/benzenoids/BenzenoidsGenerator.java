@@ -1,6 +1,10 @@
 package benzenoids;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Stack;
 import org.chocosolver.graphsolver.GraphModel;
 import org.chocosolver.graphsolver.variables.UndirectedGraphVar;
@@ -25,6 +29,21 @@ public class BenzenoidsGenerator {
 	
 	static int getHexagonID(int x, int y) {
 		return x + y * diameter;
+	}
+	
+	public static void exportSolution(ArrayList<Solution> solutions, String outputFileName) {
+		try {
+			BufferedWriter w = new BufferedWriter(new FileWriter(new File(outputFileName)));
+			
+			for (Solution solution : solutions) {
+				w.write(solution.toString() + "\n");
+			}
+			
+			w.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//arete z de l'hexagone (x,y)
@@ -166,22 +185,20 @@ public class BenzenoidsGenerator {
 		Solver solver = model.getSolver();		
 	
 		//Generation des structures moléculaires 
-		Stack<Solution> solutionStack = new Stack<Solution>();
+		ArrayList<Solution> solutions = new ArrayList<Solution>();
 		while(solver.solve()) {
 			Solution solution = new Solution(model);
 			solution.record();
-			//System.out.println(solution);
-			//System.out.println("\n\n" + subgraph);
-			
 			String outputFileName = directoryName + "molecule_" + nbMolecules;
 			@SuppressWarnings("unused")
 			SolutionConverter converter = new SolutionConverter(solution, nbCrowns, diameter, outputFileName);
 			nbMolecules ++;
 			
-			solutionStack.push(solution);
+			solutions.add(solution);
 		}
 		
-		System.out.println(solutionStack.size() + " molecules generateds");
+		exportSolution(solutions, nbCrowns + "_crowns.graph");
+		System.out.println(solutions.size() + " molecules generateds");
 	}
 	
 	public static void displayUsage() {

@@ -91,7 +91,7 @@ public class SolutionConverter {
 	}
 	
 	public void updateGraph(int vertex1, int vertex2) {
-		System.out.println(vertex1 + " -- " + vertex2);
+		//System.out.println(vertex1 + " -- " + vertex2);
 		edges[vertex1][vertex2] = 1;
 		edges[vertex2][vertex1] = 1;
 		nodes[vertex1] = 1;
@@ -272,6 +272,25 @@ public class SolutionConverter {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void displayUsage() {
+		System.err.println("USAGE : java -jar ${EXEC_NAME} input output");
+	}
+	
+	public static void readSolutions() {
+		
+	}
+	
+	public static void main(String [] args) {
+		
+		if (args.length < 2) {
+			displayUsage();
+			System.exit(1);
+		}
+		
+		String inputFileName = args[0];
+		String outputFileName = args[1];
 	}
 	
 }
