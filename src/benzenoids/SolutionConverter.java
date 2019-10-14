@@ -41,8 +41,8 @@ public class SolutionConverter {
 		
 		readSolution();
 		createMolecule();
-		exportToDimacs(outputFileName + ".graph");
-		System.out.println("\t> " + outputFileName + ".graph" + " generated.");
+		exportToDimacs(outputFileName);
+		System.out.println("\t> " + outputFileName + " generated.");
 	}
 	
 	public void readSolution() {
@@ -64,9 +64,6 @@ public class SolutionConverter {
 		}
 		
 	}
-	
-
-
 	
 	public int xy2i(int x, int y, int taille) {
 		return x + y * taille;
@@ -319,8 +316,6 @@ public class SolutionConverter {
 		int nbCrowns = Integer.parseInt(args[1]);
 		
 		readSolutions(inputFileName, nbCrowns);
-			
-		
 	}
 	
 }

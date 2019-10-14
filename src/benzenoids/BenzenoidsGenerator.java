@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Stack;
 import org.chocosolver.graphsolver.GraphModel;
 import org.chocosolver.graphsolver.variables.UndirectedGraphVar;
 import org.chocosolver.solver.Solution;
@@ -190,15 +189,14 @@ public class BenzenoidsGenerator {
 			Solution solution = new Solution(model);
 			solution.record();
 			String outputFileName = directoryName + "molecule_" + nbMolecules;
-			@SuppressWarnings("unused")
-			SolutionConverter converter = new SolutionConverter(solution.toString(), nbCrowns, diameter, outputFileName);
+			//SolutionConverter converter = new SolutionConverter(solution.toString(), nbCrowns, diameter, outputFileName);
 			nbMolecules ++;
 			
 			solutions.add(solution);
 		}
 		
-		exportSolution(solutions, nbCrowns + "_crowns.graph");
-		System.out.println(solutions.size() + " molecules generateds");
+		exportSolution(solutions, nbCrowns + "_crowns.txt");
+		System.out.println(solutions.size() + " molecules generateds > " + nbCrowns + "_crowns.txt");
 	}
 	
 	public static void displayUsage() {
@@ -216,7 +214,7 @@ public class BenzenoidsGenerator {
 		else
 			nbHexa = 0;
 
-		System.out.print("Generating all molecules in " + nbCrowns + " crowns tiling");
+		System.out.print("Generating non cannonic molecules in " + nbCrowns + " crowns tiling");
 		if (nbHexa != 0) {
 			System.out.println(" with " + nbHexa + " hexagons...");
 		} else {
