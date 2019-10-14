@@ -191,7 +191,7 @@ public class BenzenoidsGenerator {
 			solution.record();
 			String outputFileName = directoryName + "molecule_" + nbMolecules;
 			@SuppressWarnings("unused")
-			SolutionConverter converter = new SolutionConverter(solution, nbCrowns, diameter, outputFileName);
+			SolutionConverter converter = new SolutionConverter(solution.toString(), nbCrowns, diameter, outputFileName);
 			nbMolecules ++;
 			
 			solutions.add(solution);

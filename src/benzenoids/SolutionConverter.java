@@ -1,7 +1,10 @@
 package benzenoids;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,7 +14,7 @@ import org.chocosolver.solver.Solution;
 
 public class SolutionConverter {
 
-	private Solution solution;
+	private String solution;
 	@SuppressWarnings("unused")
 	private int nbCrowns;
 	private int diameter;
@@ -26,7 +29,7 @@ public class SolutionConverter {
 	private int nbHexagons;
 	private int maxVertexId = -1;
 	
-	public SolutionConverter(Solution solution, int nbCrowns, int size, String outputFileName) {
+	public SolutionConverter(String solution, int nbCrowns, int size, String outputFileName) {
 		this.solution = solution;
 		this.nbCrowns = nbCrowns;
 		this.diameter = size;
@@ -38,13 +41,13 @@ public class SolutionConverter {
 		
 		readSolution();
 		createMolecule();
-		exportToDimacs(outputFileName + "_" + nbHexagons + "_hexagons.graph");
-		System.out.println("\t> " + outputFileName + "_" + nbHexagons + "_hexagons.graph" + " generated.");
+		exportToDimacs(outputFileName + ".graph");
+		System.out.println("\t> " + outputFileName + ".graph" + " generated.");
 	}
 	
 	public void readSolution() {
 		
-		String toString = solution.toString();
+		String toString = solution;
 		String [] subString1 = toString.split(Pattern.quote(": "));
 		
 		String toString2 = subString1[1];
@@ -274,12 +277,35 @@ public class SolutionConverter {
 		}
 	}
 	
-	public static void displayUsage() {
-		System.err.println("USAGE : java -jar ${EXEC_NAME} input output");
+	public static void readSolutions(String inputFileName, int nbCrowns) {
+		
+		int diameter = 2 * nbCrowns - 1;
+		
+		try {
+			
+			File file = new File(nbCrowns + "_crowns");
+			file.mkdir();
+			
+			BufferedReader r = new BufferedReader(new FileReader(new File(inputFileName)));
+			String line;
+			
+			int i = 0;
+			
+			while ((line = r.readLine()) != null) {
+				String outputFileName = nbCrowns + "_crowns_" + i + ".graph";
+				@SuppressWarnings("unused")
+				SolutionConverter converter = new SolutionConverter(line, nbCrowns, diameter, nbCrowns + "_crowns/" + outputFileName);
+				i ++;
+			}
+			
+			r.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public static void readSolutions() {
-		
+	public static void displayUsage() {
+		System.err.println("USAGE : java -jar ${EXEC_NAME} input nbCrowns");
 	}
 	
 	public static void main(String [] args) {
@@ -290,7 +316,11 @@ public class SolutionConverter {
 		}
 		
 		String inputFileName = args[0];
-		String outputFileName = args[1];
+		int nbCrowns = Integer.parseInt(args[1]);
+		
+		readSolutions(inputFileName, nbCrowns);
+			
+		
 	}
 	
 }
