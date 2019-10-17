@@ -261,6 +261,8 @@ public class BenzenoidsSolver {
 		
 		int nbMaxEdges = cycles.get(0).getEdges().length;
 		
+		int nbIndependant = 0;
+		
 		for (int i = 0 ; i < cycles.size() ; i++) {
 			Cycle cycle = cycles.get(i);
 			int [] sumCycles = new int [nbMaxEdges];
@@ -283,52 +285,14 @@ public class BenzenoidsSolver {
 				}
 			}
 			
-			if (independant)
+			if (independant) {
 				cyclesCount[cycle.getSize()] ++;
-		}
-	}
-	
-	public static boolean isLinearyIndependant(DirectedGraphVar C, DirectedGraph GUB, DirectedGraph GLB, int nbMaxEdges) {
-		
-		//Initialiser le modèle
-		GraphModel model = new GraphModel("Lineary Independant");
-		DirectedGraphVar g = model.digraphVar("g", GLB, GUB);
-		
-		//Contraintes nombre d'arêtes
-		IntVar nbArcs = model.intVar("arcCount", 0, nbMaxEdges, true);		
-		model.nbArcs(g, nbArcs).post();
-		
-		//g doit avoir 4 faces (caractérisation d'Euler)
-		int nbGVertices = g.getMandatoryNodes().size();
-		model.arithm(nbArcs, "=", nbGVertices + 2).post();
-		
-		//C circuit de g
-		model.subGraph(C, g).post();
-		
-		//Il existe C' circuit de G et (C'!=C)
-		DirectedGraphVar CBis = model.digraphVar("g", GLB, GUB);
-	
-		//Nb arcs de C'
-		IntVar nbArcsCBis = model.intVar("arcCount", 0, nbMaxEdges, true);		
-		model.nbArcs(g, nbArcsCBis).post();
-		
-		//C' circuit de G
-		model.stronglyConnected(CBis).post();
-		model.maxOutDegrees(CBis, 1).post();
-		model.minOutDegrees(CBis, 1).post();
-		model.arithm(model.nbNodes(CBis), ">", 1).post();	
-		
-		//C' différent de C
-		model.arithm(nbArcsCBis, "<", nbArcs.getValue());
-		
-		//Résoudre le problème
-		Solver solver = model.getSolver();
-		boolean found = false;
-		while(solver.solve()) {
-			found = true;
+				nbIndependant ++;
+			}
 		}
 		
-		return !found;
+		System.out.println(nbIndependant + " indep cycles");
+		System.out.println("");
 	}
 	
 	public static void computeCycles(String path, String outputDirectory) {
@@ -394,6 +358,17 @@ public class BenzenoidsSolver {
 			count = newCount;
 		}
 		
+		//DEBUG
+		
+		System.out.print("Atomes * : [");
+		for (int i = 0 ; i < nodesSet.length ; i++) {
+			if (nodesSet[i] == 1)
+				System.out.print((i+1) + ", ");
+		}
+		System.out.println("]");
+		
+		
+		
 		//Récupérer l'ensemble des couples d'arêtes alternantes
 		ArrayList<DirectedEdge> edges = new ArrayList<DirectedEdge>();
 		//for (int u = 0 ; u < nbNode ; u++) {
@@ -415,6 +390,11 @@ public class BenzenoidsSolver {
 				
 			}
 		}
+	
+		System.out.println("");
+		System.out.println("Edges : ");
+		for (DirectedEdge e : edges)
+			System.out.println(e.toString());
 		
 		//Créer le problème
 		//TODO: gérer les trou dans les noeuds
@@ -466,7 +446,7 @@ public class BenzenoidsSolver {
 			solution.record();
 			
 			System.out.println(g);
-			System.out.println(solution);
+			//System.out.println(solution);
 			
 			exportGraph(g, outputDirectory, "cycle_" + i + ".dot");
 			
@@ -477,20 +457,22 @@ public class BenzenoidsSolver {
 			
 			int [] edgesCycle = new int[boolEdges.length];
 			
-			System.out.print("[");
+			//System.out.print("[");
 			for (int j = 0 ; j < boolEdges.length ; j++) {
-				System.out.print(solution.getIntVal(boolEdges[j]) + ", ");
+				//System.out.print(solution.getIntVal(boolEdges[j]) + ", ");
 				edgesCycle[j] = solution.getIntVal(boolEdges[j]);
 			}
-			System.out.println("]");
+			//System.out.println("]");
 			
 			cycles.add(new Cycle(edgesCycle, nbNodesSolution));
 			
 			i ++;
+			
 		}
 		
 		Collections.sort(cycles);
 		countCycles(cycles);
+		
 	}
 	
 	public static int getR(int nbEdges) {
@@ -583,6 +565,6 @@ public class BenzenoidsSolver {
 		
 		//String path = args[0];
 		//analyzeMolecule(path);
-		analyzeMolecule("molecules/2_crowns/molecule_0_5_hexagons.graph");
+		analyzeMolecule("molecules/2_crowns/2_crowns_14.graph");
  	}
 }
